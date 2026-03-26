@@ -1,0 +1,80 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('checkerForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const loadingDiv = document.getElementById('loading');
+    const resultContainer = document.getElementById('resultContainer');
+    const tableBody = document.getElementById('tableBody');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const studentId = document.getElementById('studentId').value;
+        const password = document.getElementById('password').value;
+        const courseCode = document.getElementById('courseCode').value;
+        
+        // เช็คว่าติ๊ก "อัปเดตข้อมูลใหม่จากเว็บ" หรือไม่
+        const isForceUpdate = document.getElementById('forceUpdate').checked;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'กำลังตรวจสอบ...';
+        resultContainer.classList.add('hidden');
+        loadingDiv.classList.remove('hidden');
+        tableBody.innerHTML = '';
+
+        try {
+            // ยิง API ไปที่เซิร์ฟเวอร์ Python
+            const response = await fetch('http://localhost:8000/api/check_assignments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    student_id: studentId,
+                    password: password,
+                    course_code: courseCode,
+                    force_update: isForceUpdate // ส่งค่าไปให้ Python รู้
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.detail || 'เกิดข้อผิดพลาดในการดึงข้อมูล');
+            }
+
+            renderTable(result.data);
+            
+            loadingDiv.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+
+        } catch (error) {
+            alert('❌ ข้อผิดพลาด: ' + error.message);
+            loadingDiv.classList.add('hidden');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'เช็คงานเลย';
+        }
+    });
+
+    function renderTable(data) {
+        if (data.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center;">ไม่พบข้อมูลงานในวิชานี้</td></tr>';
+            return;
+        }
+
+        data.forEach(item => {
+            const tr = document.createElement('tr');
+            
+            const statusHtml = item.submitted 
+                ? '<span class="status-done">ส่งแล้ว</span>' 
+                : '<span class="status-pending">ยังไม่ส่ง</span>';
+
+            tr.innerHTML = `
+                <td>${item.course_name}</td>
+                <td><a href="${item.url}" target="_blank">${item.title}</a></td>
+                <td>${statusHtml}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+});

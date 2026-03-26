@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCU Assignment Checker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>HCU E-Learning Checker</h1>
+        <p class="subtitle">เช็คสถานะการส่งงานและฐานข้อมูลอัตโนมัติ</p>
+
+        <form id="checkerForm">
+            <div class="form-group">
+                <label for="studentId">รหัสนักศึกษา</label>
+                <input type="text" id="studentId" placeholder="กรอกรหัสนักศึกษา" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">รหัสผ่าน</label>
+                <input type="password" id="password" placeholder="กรอกรหัสผ่าน" required>
+            </div>
+
+            <div class="form-group">
+                <label for="courseCode">รหัสวิชา</label>
+                <input type="text" id="courseCode" placeholder="เช่น AI2503" required>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; background-color: #e9ecef; padding: 10px; border-radius: 5px;">
+                <input type="checkbox" id="forceUpdate" style="width: auto; margin: 0; cursor: pointer;">
+                <label for="forceUpdate" style="margin: 0; font-weight: normal; cursor: pointer;">
+                    อัปเดตข้อมูลใหม่จากเว็บ <b>(ถ้าไม่ติ๊ก จะโหลดจากฐานข้อมูลที่เซฟไว้)</b>
+                </label>
+            </div>
+
+            <button type="submit" id="submitBtn">เช็คงานเลย</button>
+        </form>
+
+        <div id="loading" class="hidden">
+            <div class="spinner"></div>
+            <p>กำลังดึงข้อมูล...</p>
+        </div>
+
+        <div id="resultContainer" class="hidden">
+            <h2>ผลการค้นหา</h2>
+            <table id="resultTable">
+                <thead>
+                    <tr>
+                        <th>รหัส/ชื่อวิชา</th>
+                        <th>ชื่องาน (Assignment)</th>
+                        <th>สถานะ</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
