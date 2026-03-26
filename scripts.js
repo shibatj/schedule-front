@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value;
         const courseCode = document.getElementById('courseCode').value;
         
-        // เช็คว่าติ๊ก "อัปเดตข้อมูลใหม่จากเว็บ" หรือไม่
+        // เช็คสถานะ Checkbox ว่าจะดึงจาก Database หรือ Force Update จากเว็บ
         const isForceUpdate = document.getElementById('forceUpdate').checked;
 
         submitBtn.disabled = true;
@@ -22,8 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tableBody.innerHTML = '';
 
         try {
-            // ⚠️ จุดที่ต้องแก้ไข: เปลี่ยน URL ด้านล่างนี้ให้เป็น URL ของ Render ที่คุณเจมส์ได้มาจริงๆ 
-            // (อย่าลืมคง /api/check_assignments ไว้ด้านหลังด้วยนะครับ)
+            // ✅ เปลี่ยน URL เป็นชื่อโปรเจกต์ที่คุณตั้งใน Render เรียบร้อยแล้ว
             const apiUrl = 'https://hcu-assignment-api.onrender.com/api/check_assignments';
 
             const response = await fetch(apiUrl, {
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     student_id: studentId,
                     password: password,
                     course_code: courseCode,
-                    force_update: isForceUpdate // ส่งค่าไปให้ Python รู้
+                    force_update: isForceUpdate
                 })
             });
 
