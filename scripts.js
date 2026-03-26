@@ -22,8 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
         tableBody.innerHTML = '';
 
         try {
-            // ยิง API ไปที่เซิร์ฟเวอร์ Python
-            const response = await fetch('http://localhost:8000/api/check_assignments', {
+            // ⚠️ จุดที่ต้องแก้ไข: เปลี่ยน URL ด้านล่างนี้ให้เป็น URL ของ Render ที่คุณเจมส์ได้มาจริงๆ 
+            // (อย่าลืมคง /api/check_assignments ไว้ด้านหลังด้วยนะครับ)
+            const apiUrl = 'https://hcu-assignment-api.onrender.com/api/check_assignments';
+
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
